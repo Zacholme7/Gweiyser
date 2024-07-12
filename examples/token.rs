@@ -20,12 +20,14 @@ async  fn main() {
         let usdc_symbol = usdc.symbol();
         println!("{}: {} decimals", usdc_symbol, usdc_decimals);
 
+
 /* 
         // Attempt to construct a uniswapV2 pool wtih the two tokens
         // construciton order does not matter, these are the same pool
-        let weth_usdc_v2 = gweisyer.uniswapV2(weth, usdc)?;
-        let usdc_weth_v2 = gweisyer.uniswapV2(usdc, weth)?;
+        let weth_usdc_v2 = gweiyser.uniswapV2(weth, usdc).await;
+        let usdc_weth_v2 = gweiyser.uniswapV2(usdc, weth).await;
         assert!(weth_usdc_v2.address() == usdc_weth_v2.address());
+
 
         // simulate a swap
         // reserve querying and unit conversion will happen beind the scenes

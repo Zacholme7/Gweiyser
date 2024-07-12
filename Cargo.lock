@@ -86,9 +86,9 @@ dependencies = [
 
 [[package]]
 name = "alloy-contract"
-version = "0.1.3"
+version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0c26b7d34cb76f826558e9409a010e25257f7bfb5aa5e3dd0042c564664ae159"
+checksum = "7dc6957ff706f9e5f6fd42f52a93e4bce476b726c92d077b348de28c4a76730c"
 dependencies = [
  "alloy-dyn-abi",
  "alloy-json-abi",
@@ -1353,6 +1353,8 @@ name = "gweiyser"
 version = "0.1.0"
 dependencies = [
  "alloy",
+ "alloy-contract",
+ "alloy-sol-types",
  "tokio",
 ]
 

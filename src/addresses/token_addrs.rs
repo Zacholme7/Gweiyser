@@ -1,22 +1,5 @@
 use alloy::primitives::{Address, address};
 
-/// Representation of a token
-pub struct Token{
-        pub symbol: String,
-        pub decimals: u8,
-}
-
-
-impl Token {
-        /// Given the token address, fetches the corresponding information and returns
-        /// a populated instance of a new token
-        pub fn new(address: Address) -> Self {
-                todo!()
-        }
-}
-
-
-
 /// List of commonly used token addresses for Ethereum
 pub mod etherum_tokens {
         use super::*;

@@ -8,12 +8,12 @@ pub mod addresses;
 pub mod token;
 pub mod util;
 
-use alloy::providers::ProviderBuilder;
+use alloy::providers::{ProviderBuilder, WsConnect};
 use alloy::transports::http::reqwest::Url;
 use alloy::primitives::Address;
 use std::sync::Arc;
 
-use crate::util::ArcHttpProvider;
+use crate::util::{ArcHttpProvider, ArcWsProvider};
 use crate::amms::uniswap::v2::pool::UniswapV2Pool;
 use crate::amms::uniswap::v2::factory::UniswapV2Factory;
 
@@ -21,7 +21,8 @@ use crate::amms::uniswap::v2::factory::UniswapV2Factory;
 
 
 pub struct Gweisyer {
-        provider: ArcHttpProvider,
+        http: ArcHttpProvider,
+        ws: ArcWsProvider,
         uniswapv2_factory: UniswapV2Factory
 }
 
@@ -29,16 +30,17 @@ pub struct Gweisyer {
 impl Gweisyer {
         /// Construct a new Gweisyer
         /// will instantiate a new provider with the provided rpc url
-        pub fn new(url: impl Into<String> ) -> Self {
-                let url: Url = url.into().parse().unwrap();
-                let provider = Arc::new(ProviderBuilder::new()
-                        .on_http(url));
-                let uniswapv2_factory = UniswapV2Factory::new(provider.clone());
+        pub async fn new(http_url: impl Into<String>, ws_url: impl Into<String>) -> Self {
+                let http_url: Url = http_url.into().parse().unwrap();
+                let http = Arc::new(ProviderBuilder::new()
+                        .on_http(http_url));
+                let ws = Arc::new(ProviderBuilder::new()
+                        .on_ws(WsConnect::new(ws_url)).await.unwrap());
 
-
-
+                let uniswapv2_factory = UniswapV2Factory::new(http.clone(), ws.clone());
                 Self {
-                        provider,
+                        http,
+                        ws,
                         uniswapv2_factory
                 }
         }
@@ -46,7 +48,7 @@ impl Gweisyer {
         // Construct an new token
         pub async fn token(&self, address: Address) -> Token {
                 // Just delegate the call to the token object
-                let token = Token::new(address, self.provider.clone()).await;
+                let token = Token::new(address, self.http.clone()).await;
                 token
         }
 

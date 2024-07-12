@@ -1,3 +1,4 @@
+use alloy::pubsub::PubSubFrontend;
 use alloy::transports::http::{Http, Client};
 use alloy::network::Ethereum;
 use alloy::providers::RootProvider;
@@ -7,4 +8,5 @@ use std::sync::Arc;
 pub type HttpTransport = Http<Client>;
 pub type HttpProvider = RootProvider<HttpTransport, Ethereum>;
 pub type ArcHttpProvider = Arc<HttpProvider>;
+pub type ArcWsProvider = Arc<RootProvider<PubSubFrontend>>;
 

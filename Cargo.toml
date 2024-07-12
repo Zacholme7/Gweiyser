@@ -12,4 +12,5 @@ path = "examples/token.rs"
 alloy = { version = "0.1.4", features = ["full"] }
 alloy-contract = "0.1.4"
 alloy-sol-types = "0.7.7"
+futures = "0.3.30"
 tokio = { version = "1.38.0", features = ["full"] }

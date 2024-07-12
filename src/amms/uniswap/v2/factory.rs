@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 use alloy::primitives::Address;
-use crate::util::{ArcHttpProvider, HttpTransport};
+use crate::util::{ArcHttpProvider, HttpTransport, ArcWsProvider};
 use crate::addresses::amm_addrs::uniswap_v2::factory;
 use crate::Token;
 use super::gen::{IUniswapV2Factory, IUniswapV2Factory::IUniswapV2FactoryInstance};
@@ -9,15 +9,20 @@ use super::pool::UniswapV2Pool;
 
 pub struct UniswapV2Factory {
         factory_contract: IUniswapV2FactoryInstance<HttpTransport, ArcHttpProvider>,
+        http: ArcHttpProvider,
+        ws: ArcWsProvider
+
 }
 
 
 impl UniswapV2Factory {
         /// Creates an instance of a new UniswapV2 factory
-        pub fn new(provider: ArcHttpProvider) -> Self {
-                let factory_contract = IUniswapV2Factory::new(factory, provider);
+        pub fn new(http: ArcHttpProvider, ws: ArcWsProvider) -> Self {
+                let factory_contract = IUniswapV2Factory::new(factory, http.clone());
                 Self  {
-                        factory_contract
+                        factory_contract,
+                        http,
+                        ws
                 }
         }
 
@@ -34,7 +39,9 @@ impl UniswapV2Factory {
                         // the pool does not exist
                         todo!()
                 } else {
-                        UniswapV2Pool::new(_0, token0, token1)
+                        let mut pool = UniswapV2Pool::new(_0, token0, token1, self.http.clone());
+                        pool.sync_reserves(self.ws.clone());
+                        pool
                 }
         }
 

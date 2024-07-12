@@ -1355,6 +1355,7 @@ dependencies = [
  "alloy",
  "alloy-contract",
  "alloy-sol-types",
+ "futures",
  "tokio",
 ]
 

@@ -1,15 +1,14 @@
 use alloy::primitives::{Address, U256};
-use std::sync::Arc;
-use alloy::providers::RootProvider;
-use alloy::transports::http::{Http, Client};
-
-use crate::token::abi::ERC20Token;
 use crate::util::{ArcHttpProvider, HttpTransport};
-
+use super::abi::{
+        ERC20Token::ERC20TokenInstance,
+        ERC20Token
+};
 
 /// Representation of a token
 pub struct Token{
-        token_contract: ERC20Token::ERC20TokenInstance<HttpTransport, ArcHttpProvider>,
+        token_contract: ERC20TokenInstance<HttpTransport, ArcHttpProvider>,
+        address: Address,
         symbol: String,
         decimals: u8,
 }
@@ -24,6 +23,7 @@ impl Token {
                 let ERC20Token::decimalsReturn { decimals } = token_contract.decimals().call().await.unwrap();
                 Self {
                         token_contract,
+                        address, 
                         symbol,
                         decimals
                 }
@@ -39,6 +39,11 @@ impl Token {
         pub async fn balance_of_normalized(&self, address: Address) -> U256 {
                 let ERC20Token::balanceOfReturn { balance} = self.token_contract.balanceOf(address).call().await.unwrap();
                 balance / U256::from(10u128.pow(self.decimals as u32))
+        }
+
+        /// Returns the address of the token
+        pub fn address(&self) -> Address {
+                self.address
         }
 
         /// Returns the precision of the token

@@ -1,4 +1,5 @@
-// reexports
+use addresses::amm_addrs::uniswap_v2;
+// re-exports
 pub use token::Token;
 
 // modules defines
@@ -7,16 +8,21 @@ pub mod addresses;
 pub mod token;
 pub mod util;
 
-use alloy::providers::{ProviderBuilder, RootProvider};
-use alloy::transports::http::{Http, Client};
+use alloy::providers::ProviderBuilder;
 use alloy::transports::http::reqwest::Url;
 use alloy::primitives::Address;
 use std::sync::Arc;
 
 use crate::util::ArcHttpProvider;
+use crate::amms::uniswap::v2::pool::UniswapV2Pool;
+use crate::amms::uniswap::v2::factory::UniswapV2Factory;
+
+
+
 
 pub struct Gweisyer {
-        provider: ArcHttpProvider
+        provider: ArcHttpProvider,
+        uniswapv2_factory: UniswapV2Factory
 }
 
 
@@ -27,9 +33,13 @@ impl Gweisyer {
                 let url: Url = url.into().parse().unwrap();
                 let provider = Arc::new(ProviderBuilder::new()
                         .on_http(url));
+                let uniswapv2_factory = UniswapV2Factory::new(provider.clone());
+
+
 
                 Self {
-                        provider
+                        provider,
+                        uniswapv2_factory
                 }
         }
 
@@ -40,24 +50,11 @@ impl Gweisyer {
                 token
         }
 
-                /* 
         /// Build a new UniswapV2AmmPool
         /// This will lazy load the factory address, only want the factory is we are looking for a pool
-        pub fn uniswapV2(&mut self, base: Address, quote: Address) -> UniswapV2Pool {
-                if self.uniswapv2_factory.is_none() {
-                        // this is our first time constructing a pool, we want to initialize the factory for future use
-                        let factory = IUniswapV2Factory::new(self.provider.clone());
-                        self.uniswapv2_factory  = factory;
-                }
-
-
-
-
-
-                let pool = UniswapV2::new(base, quote, self.provider().clone).await;
-                pool
+        pub async fn uniswapV2(&self, base: &Token, quote: &Token) -> UniswapV2Pool {
+                self.uniswapv2_factory.query_for_pool(base, quote).await
         }
-                */
         
 
 }

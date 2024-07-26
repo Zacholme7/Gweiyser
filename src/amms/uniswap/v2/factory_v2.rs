@@ -1,6 +1,6 @@
 use super::gen::{IUniswapV2Factory, IUniswapV2Factory::IUniswapV2FactoryInstance};
 use super::pool_v2::UniswapV2Pool;
-use crate::addresses::amm_addrs::uniswap_v2::factory;
+use crate::amms::uniswap::v2::factory_v2;
 use crate::util::{ArcHttpProvider, ArcWsProvider, HttpTransport};
 use crate::Token;
 use alloy::primitives::Address;
@@ -13,9 +13,11 @@ pub struct UniswapV2Factory {
 }
 
 impl UniswapV2Factory {
+    /* 
     /// Creates an instance of a new UniswapV2 factory
     pub fn new(http: ArcHttpProvider, ws: ArcWsProvider) -> Self {
-        let factory_contract = IUniswapV2Factory::new(factory, http.clone());
+        let factory_address = factory_v2::address();
+        let factory_contract = IUniswapV2Factory::new(factory_address, http.clone());
         Self {
             factory_contract,
             http,
@@ -46,5 +48,6 @@ impl UniswapV2Factory {
             pool
         }
     }
+    */
 }
 

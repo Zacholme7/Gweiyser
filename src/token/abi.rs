@@ -10,5 +10,6 @@ sol!(
         function approve(address spender, uint256 amount) external returns (bool success);
         function allowance(address owner, address spender) public view returns (uint256 allowance);
         function decimals() public view returns (uint8 decimals);
+        function deposit() external payable;
     }
 );

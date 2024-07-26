@@ -19,6 +19,7 @@ pub struct UniswapV2Pool {
     token1_reserves: u128,
 }
 
+/* 
 // todo!() start a task with a provider that is constantly syncing reserves
 impl UniswapV2Pool {
     /// Construct a new UniswapV2 pool from the pool address and token information
@@ -77,5 +78,5 @@ impl UniswapV2Pool {
         let scale = U256::from(1000);
         (quote_reserves * amount_in_256 * fee) / (base_reserves * scale + amount_in_256)
     }
-}
+}*/
 

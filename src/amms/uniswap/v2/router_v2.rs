@@ -2,6 +2,7 @@ use super::r#gen::IUniswapV2Router::{self, IUniswapV2RouterInstance};
 
 
 
+/* 
 
 pub struct UniswapV2Router {
     router_contract: IUniswapV2RouterInstance<HttpTransport, ArcHttpProvider>,
@@ -33,4 +34,6 @@ impl UniswapV2Router {
     }
 
 
+
 }
+    */

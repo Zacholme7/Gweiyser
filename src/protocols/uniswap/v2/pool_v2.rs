@@ -1,10 +1,10 @@
-use super::gen::IUniswapV2Pool;
-use crate::util::{ArcHttpProvider, ArcWsProvider};
-use crate::Token;
 use alloy::primitives::{Address, U256};
-use alloy::rpc::types::Filter;
-use alloy_sol_types::{SolCall, SolEvent, SolEventInterface};
-use futures::StreamExt;
+use alloy::transports::Transport;
+use alloy::providers::Provider;
+use alloy::network::Network;
+use std::sync::Arc;
+
+use super::gen::IUniswapV2Pool;
 
 #[derive(Default, Debug)]
 pub struct UniswapV2Pool {
@@ -18,6 +18,7 @@ pub struct UniswapV2Pool {
     token0_reserves: u128,
     token1_reserves: u128,
 }
+
 
 /* 
 // todo!() start a task with a provider that is constantly syncing reserves

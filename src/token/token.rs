@@ -1,11 +1,11 @@
 use super::abi::{ERC20Token, ERC20Token::ERC20TokenInstance};
-use crate::util::{ArcHttpProvider, HttpTransport};
 use alloy::primitives::{Address, U256};
-use crate::addresses::token_addrs::ethereum_tokens::WETH;
-use std::sync::Arc;
-use alloy::providers::Provider;
 use alloy::transports::Transport;
+use alloy::providers::Provider;
 use alloy::network::Network;
+use std::sync::Arc;
+
+use crate::addresses::token_addrs::ethereum_tokens::WETH;
 
 pub struct Token<P, T, N>
 where 
@@ -50,9 +50,10 @@ where
         self.symbol.as_str()
     }
 
+    // often want to do maths with decimals, so 256 ret is a convenience thing :)
     /// Returns the precision of the token
-    pub fn decimals(&self) -> u8 {
-        self.decimals
+    pub fn decimals(&self) -> U256 {
+        U256::from(self.decimals)
     }
 
     // Given an address, returns the amount of tokens that address has in the raw value

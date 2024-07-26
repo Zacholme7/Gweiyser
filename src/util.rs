@@ -1,11 +1,8 @@
-use alloy::network::Ethereum;
-use alloy::providers::RootProvider;
-use alloy::pubsub::PubSubFrontend;
-use alloy::transports::http::{Client, Http};
-use std::sync::Arc;
+use alloy::primitives::U256;
 
-// type definitions to make life a little easier
-pub type HttpTransport = Http<Client>;
-pub type HttpProvider = RootProvider<HttpTransport, Ethereum>;
-pub type ArcHttpProvider = Arc<HttpProvider>;
-pub type ArcWsProvider = Arc<RootProvider<PubSubFrontend>>;
+// some commonly used eth values
+pub const ONE_ETH: U256 = U256::from_limbs([1_000_000_000_000_000_000u64, 0, 0, 0]);
+pub const HALF_ETH: U256 = U256::from_limbs([500_000_000_000_000_000u64, 0, 0, 0]);
+pub const QUARTER_ETH: U256 = U256::from_limbs([250_000_000_000_000_000u64, 0, 0, 0]);
+pub const TENTH_ETH: U256 = U256::from_limbs([100_000_000_000_000_000u64, 0, 0, 0]);
+

@@ -16,7 +16,7 @@ pub mod addresses;
 
 
 
-pub struct Gweisyer<P, T, N>
+pub struct Gweiyser<P, T, N>
 where
     P: Provider<T, N>,
     T: Transport + Clone,
@@ -26,7 +26,7 @@ where
     _phantom: PhantomData<(T, N)>,
 }
 
-impl<P, T, N> Gweisyer<P, T, N>
+impl<P, T, N> Gweiyser<P, T, N>
 where
     P: Provider<T, N>,
     T: Transport + Clone,

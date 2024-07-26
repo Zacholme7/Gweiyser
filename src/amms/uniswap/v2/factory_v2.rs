@@ -1,5 +1,5 @@
 use super::gen::{IUniswapV2Factory, IUniswapV2Factory::IUniswapV2FactoryInstance};
-use super::pool::UniswapV2Pool;
+use super::pool_v2::UniswapV2Pool;
 use crate::addresses::amm_addrs::uniswap_v2::factory;
 use crate::util::{ArcHttpProvider, ArcWsProvider, HttpTransport};
 use crate::Token;

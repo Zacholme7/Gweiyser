@@ -6,7 +6,7 @@ use gweiyser::Token;
 async fn main() {
     // instantiate gweiyser with an rpc url
     // will construct a provider to fetch relevant info
-    let gweiyser = Gweisyer::new("http://eth.merkle.io", "wss://eth.merkle.io").await;
+    let gweiyser = Gweisyer::new("http://69.67.151.138:8545", "wss://eth.merkle.io").await;
     // Construct new tokens and query general information
     // The info will be automatically populated via the provider upon construciton
     let weth = gweiyser.token(WETH).await;

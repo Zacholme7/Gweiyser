@@ -6,7 +6,6 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use gweiyser::addresses::tokens::ethereum_tokens::{WETH, USDC};
-use gweiyser::util::ONE_ETH;
 
 use gweiyser::Gweisyer;
 

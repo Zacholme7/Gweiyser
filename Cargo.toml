@@ -10,6 +10,10 @@ license = "MIT OR Apache-2.0"
 name = "token"
 path = "examples/token.rs"
 
+[[bin]]
+name = "uniswap"
+path = "examples/uniswap.rs"
+
 [dependencies]
 alloy = { version = "0.2.0", features = ["full", "node-bindings"] }
 alloy-contract = "0.2.0"

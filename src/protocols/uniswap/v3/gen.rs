@@ -16,5 +16,5 @@ sol!(
 sol!( 
     #[sol(rpc)]
     ITickLens,
-    "src/protocols/uniswap/v3/abis/TickLens.json"
-)
+    "src/protocols/uniswap/v3/abis/UniswapV3TickLens.json"
+);

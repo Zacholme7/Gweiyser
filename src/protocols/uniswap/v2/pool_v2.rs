@@ -5,6 +5,7 @@ use alloy::network::Network;
 use std::sync::Arc;
 
 use super::gen::IUniswapV2Pool;
+use crate::token::abi::ERC20Token;
 
 #[derive(Default, Debug)]
 pub struct UniswapV2Pool {
@@ -19,65 +20,76 @@ pub struct UniswapV2Pool {
     token1_reserves: u128,
 }
 
-
-/* 
-// todo!() start a task with a provider that is constantly syncing reserves
 impl UniswapV2Pool {
-    /// Construct a new UniswapV2 pool from the pool address and token information
-    pub fn new(pool: Address, token0: &Token, token1: &Token, provider: ArcHttpProvider) -> Self {
-        // initial pool reserve
+    /// Create a new pool and populate it
+    /// todo!() make it opetial between two tokens and address
+    pub async fn new<P, T, N>(address: Address, provider: Arc<P>) -> Self 
+    where 
+        P: Provider<T, N>,
+        T: Transport + Clone,
+        N: Network,
+    {
+        let pool_contract = IUniswapV2Pool::new(address, provider.clone());
+        let IUniswapV2Pool::token0Return { _0: token0 } = pool_contract.token0().call().await.unwrap();
+        let IUniswapV2Pool::token1Return { _0: token1 } = pool_contract.token1().call().await.unwrap();
+
+        // make the erc20 contracts to get the token names
+        let token0_contract = ERC20Token::new(token0, provider.clone());
+        let ERC20Token::symbolReturn { symbol: token0_symbol } = token0_contract.symbol().call().await.unwrap();
+        let ERC20Token::decimalsReturn { decimals: token0_decimals } = token0_contract.decimals().call().await.unwrap();
+        let token1_contract = ERC20Token::new(token1, provider.clone());
+        let ERC20Token::symbolReturn { symbol: token1_symbol } = token1_contract.symbol().call().await.unwrap();
+        let ERC20Token::decimalsReturn { decimals: token1_decimals } = token1_contract.decimals().call().await.unwrap();
+
+        let IUniswapV2Pool::getReservesReturn { _reserve0, _reserve1, _blockTimestampLast } = pool_contract.getReserves().call().await.unwrap();
 
         Self {
-            pool_address: pool,
-            token0_address: token0.address(),
-            token1_address: token1.address(),
-            token0_symbol: token0.symbol().to_string(),
-            token1_symbol: token1.symbol().to_string(),
-            token0_decimals: token0.decimals(),
-            token1_decimals: token1.decimals(),
-            ..Default::default()
+            pool_address: address,
+            token0_address: token0, 
+            token1_address: token1,
+            token0_symbol,
+            token1_symbol,
+            token0_decimals,
+            token1_decimals,
+            token0_reserves: _reserve0,
+            token1_reserves: _reserve1,
         }
-    }
-
-    pub fn sync_reserves(&mut self, provider: ArcWsProvider) {
-        todo!()
-        /*
-        let filter = Filter::new()
-                .event_signature(IUniswapV2Pool::Sync::SIGNATURE_HASH);
-
-        let poller = provider.subscribe_logs(&filter).await.unwrap();
-        let mut stream = poller.into_stream();
-        while let Some(log) = stream.next().await {
-                let res = IUniswapV2Pool::Sync::decode_log(log, false).unwrap();
-                println!("new log: {res:#?}");
-        }
-        */
     }
 
     /// Return the address of the pool
     pub fn address(&self) -> Address {
         self.pool_address
     }
-    /// Given a amount in, calculate the amount out
-    pub fn get_amount_out(&self, amount_in: u128, base: &Token, quote: &Token) -> U256 {
-        // dy = (y0 * dx * (1- fee)) / (x0 + dx * (1 - fee))
-        let amount_in_256 = U256::from(amount_in);
-        let (base_reserves, quote_reserves) = if base.address() == self.token0_address {
-            (
-                U256::from(self.token0_reserves),
-                U256::from(self.token1_reserves),
-            )
-        } else {
-            (
-                U256::from(self.token1_reserves),
-                U256::from(self.token0_reserves),
-            )
-        };
 
-        // calculation constants
-        let fee = U256::from(997);
-        let scale = U256::from(1000);
-        (quote_reserves * amount_in_256 * fee) / (base_reserves * scale + amount_in_256)
+    pub fn token0_address(&self) -> Address {
+        self.token0_address
     }
-}*/
 
+    pub fn token1_address(&self) -> Address {
+        self.token1_address
+    }
+
+    pub fn token0_symbol(&self) -> &str {
+        self.token0_symbol.as_str()
+    }
+
+    pub fn token1_symbol(&self) -> &str {
+        self.token1_symbol.as_str()
+    }
+
+    pub fn token0_decimals(&self) -> u8 {
+        self.token0_decimals
+    }
+
+    pub fn token1_decimals(&self) -> u8 {
+        self.token1_decimals
+    }
+
+    pub fn token0_reserves(&self) -> U256 {
+        U256::from(self.token0_reserves)
+    }
+
+    pub fn token1_reserves(&self) -> U256 {
+        U256::from(self.token1_reserves)
+    }
+}

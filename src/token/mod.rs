@@ -1,4 +1,5 @@
 pub use token::Token;
+pub use abi::ERC20Token;
 
-pub mod abi;
-pub mod token;
+mod abi;
+mod token;

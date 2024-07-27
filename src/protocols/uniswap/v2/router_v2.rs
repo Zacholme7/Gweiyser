@@ -24,7 +24,7 @@ where
     N: Network,
 {
     /// Creates an instance of a new UniswapV2 router
-    pub fn new(provider: Arc<P>, ) -> Self {
+    pub fn new(provider: Arc<P>) -> Self {
         let router_contract = IUniswapV2Router::new(ROUTER, provider.clone());
         Self {
             router_contract,

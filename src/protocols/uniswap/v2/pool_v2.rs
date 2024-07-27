@@ -5,7 +5,7 @@ use alloy::network::Network;
 use std::sync::Arc;
 
 use super::gen::IUniswapV2Pool;
-use crate::token::abi::ERC20Token;
+use crate::token::ERC20Token;
 
 #[derive(Default, Debug)]
 pub struct UniswapV2Pool {

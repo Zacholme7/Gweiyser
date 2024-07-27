@@ -5,7 +5,7 @@ pub use router_v2::UniswapV2Router;
 
 // modules
 pub mod gen;
-pub mod factory_v2;
-pub mod pool_v2;
-pub mod router_v2;
+mod factory_v2;
+mod pool_v2;
+mod router_v2;
 

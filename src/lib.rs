@@ -5,8 +5,8 @@ use std::marker::PhantomData;
 use alloy::network::Network;
 use std::sync::Arc;
 
+use crate::protocols::uniswap::v2::{UniswapV2Pool, UniswapV2Router, UniswapV2Factory};
 use crate::token::Token;
-use crate::protocols::uniswap::v2::pool_v2::UniswapV2Pool;
 
 // modules defines
 pub mod protocols;
@@ -52,18 +52,18 @@ where
         pool
     }
 
-    /* 
     /// Construct a new uniswapv2 router
-    pub async fn uniswap_v2_router(&self) -> UniswapV2Router<P, T, N> {
-        let router = UniswapV2Router::new(self.http.clone()).await;
+    pub fn uniswap_v2_router(&self) -> UniswapV2Router<P, T, N> {
+        let router = UniswapV2Router::new(self.http.clone());
         router
     }
 
     /// Construct a new uniswapv2 factory
-    pub async fn uniswap_v2_factory(&self) -> UniswapV2Factory<P, T, N> {
-        let factory = UniswapV2Factory::new(self.http.clone()).await;
+    pub fn uniswap_v2_factory(&self) -> UniswapV2Factory<P, T, N> {
+        let factory = UniswapV2Factory::new(self.http.clone());
         factory
     }
+    /* 
 
     /// Construct a new uniswapv3 pool
     pub async fn uniswap_v3_pool(&self, address: Address) -> UniswapV3Pool<P, T, N> {

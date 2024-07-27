@@ -4,10 +4,11 @@ use alloy::network::EthereumWallet;
 use alloy::node_bindings::Anvil;
 use alloy::primitives::address;
 use anyhow::Result;
+use gweiyser::util::ONE_ETH;
 use std::sync::Arc;
 
-use gweiyser::addresses::tokens::ethereum_tokens::{WETH, USDC};
-use gweiyser::protocols::uniswap::v2::pool_v2::UniswapV2Pool;
+use gweiyser::addresses::tokens::ethereum_tokens::{WETH, USDC, DAI};
+use gweiyser::protocols::uniswap::v2::UniswapV2Router;
 use gweiyser::Gweiyser;
 
 
@@ -38,6 +39,15 @@ async fn main() -> Result<()> {
     println!("Token1 symbol {}", pool.token1_symbol());
     println!("Token0 decimals {}", pool.token0_decimals());
     println!("Token1 decimals {}", pool.token1_decimals());
+
+    let router = gweiyser.uniswap_v2_router();
+    let path = vec![WETH, USDC, DAI];
+    let weth_usdc_dai_out = router.get_amounts_out(ONE_ETH, &path).await;
+    println!("weth_usdc_dai_out: {}", weth_usdc_dai_out.last().unwrap());
+
+    let factory = gweiyser.uniswap_v2_factory();
+    let weth_usdc_pool = factory.get_pair(&WETH, &USDC).await;
+    println!("weth_usdc_pool: {}", weth_usdc_pool);
 
     Ok(())
 }

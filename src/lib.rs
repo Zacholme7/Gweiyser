@@ -1,19 +1,20 @@
-use alloy::transports::Transport;
+use alloy::network::Network;
 use alloy::primitives::Address;
 use alloy::providers::Provider;
+use alloy::transports::Transport;
 use std::marker::PhantomData;
-use alloy::network::Network;
 use std::sync::Arc;
 
-use crate::protocols::uniswap::v2::{UniswapV2Pool, UniswapV2Router, UniswapV2Factory};
+use crate::protocols::uniswap::v2::{UniswapV2Factory, UniswapV2Pool, UniswapV2Router};
+use crate::protocols::uniswap::v3::{UniswapV3Factory, UniswapV3Pool};
 use crate::token::Token;
 
 // modules defines
-pub mod protocols;
-mod token;
-mod sync_pools;
-pub mod util;
 pub mod addresses;
+pub mod protocols;
+mod sync_pools;
+mod token;
+pub mod util;
 
 pub struct Gweiyser<P, T, N>
 where
@@ -42,35 +43,37 @@ where
     // Construct an new token
     pub async fn token(&self, address: Address) -> Token<P, T, N> {
         // Just delegate the call to the token object
-        let token = Token::new(address, self.http.clone()).await;
-        token
+        Token::new(address, self.http.clone()).await
     }
 
     /// Construct a new uniswapv2 pool
     pub async fn uniswap_v2_pool(&self, address: Address) -> UniswapV2Pool {
-        let pool = UniswapV2Pool::new(address, self.http.clone()).await;
-        pool
+        UniswapV2Pool::new(address, self.http.clone()).await
     }
 
     /// Construct a new uniswapv2 router
     pub fn uniswap_v2_router(&self) -> UniswapV2Router<P, T, N> {
-        let router = UniswapV2Router::new(self.http.clone());
-        router
+        UniswapV2Router::new(self.http.clone())
     }
 
     /// Construct a new uniswapv2 factory
     pub fn uniswap_v2_factory(&self) -> UniswapV2Factory<P, T, N> {
-        let factory = UniswapV2Factory::new(self.http.clone());
-        factory
+        UniswapV2Factory::new(self.http.clone())
     }
-    /* 
 
     /// Construct a new uniswapv3 pool
     pub async fn uniswap_v3_pool(&self, address: Address) -> UniswapV3Pool<P, T, N> {
-        let pool = UniswapV3Pool::new(address, self.http.clone()).await;
-        pool
+        UniswapV3Pool::new(address, self.http.clone()).await
     }
 
+    /// Construct a new uniswapv3 factory
+    pub fn uniswap_v3_factory(&self) -> UniswapV3Factory<P, T, N> {
+        UniswapV3Factory::new(self.http.clone())
+    }
+
+
+
+    /*
 
     /// Construct a new uniswapv3 router
     pub async fn uniswap_v3_router(&self) -> UniswapV3Router<P, T, N> {
@@ -84,13 +87,5 @@ where
         quoter
     }
 
-    /// Construct a new uniswapv3 factory
-    pub async fn uniswap_v3_factory(&self) -> UniswapV3Factory<P, T, N> {
-        let factory = UniswapV3Factory::new(self.http.clone()).await;
-        factory
-    }
     */
- }
-
-
-
+}

@@ -1,16 +1,14 @@
-use alloy::signers::local::PrivateKeySigner;
-use alloy::providers::ProviderBuilder;
 use alloy::network::EthereumWallet;
 use alloy::node_bindings::Anvil;
 use alloy::primitives::address;
+use alloy::providers::ProviderBuilder;
+use alloy::signers::local::PrivateKeySigner;
 use anyhow::Result;
 use gweiyser::util::ONE_ETH;
 use std::sync::Arc;
 
-use gweiyser::addresses::tokens::ethereum_tokens::{WETH, USDC, DAI};
-use gweiyser::protocols::uniswap::v2::UniswapV2Router;
+use gweiyser::addresses::tokens::ethereum_tokens::{DAI, USDC, WETH};
 use gweiyser::Gweiyser;
-
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -21,33 +19,40 @@ async fn main() -> Result<()> {
     let wallet = EthereumWallet::new(signer);
     let provider = Arc::new(
         ProviderBuilder::new()
-        .with_recommended_fillers()
-        .wallet(wallet)
-        .on_http(anvil.endpoint_url())
+            .with_recommended_fillers()
+            .wallet(wallet)
+            .on_http(anvil.endpoint_url()),
     );
 
     // instantiate gweiyser with provider
     let gweiyser = Gweiyser::new(provider.clone());
 
-    let weth_usdc_v2 = address!("B4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc");
-    let pool = gweiyser.uniswap_v2_pool(weth_usdc_v2).await;
+    // V2
+    let factory_v2 = gweiyser.uniswap_v2_factory();
+    let weth_usdc_v2_address = factory_v2.get_pair(&WETH, &USDC).await;
+    println!("Uniswap v2 weth usdc pool: {}", weth_usdc_v2_address);
 
-    println!("Address {}", pool.address());
-    println!("Token0 {}", pool.token0_address());
-    println!("Token1 {}", pool.token1_address());
-    println!("Token0 symbol {}", pool.token0_symbol());
-    println!("Token1 symbol {}", pool.token1_symbol());
-    println!("Token0 decimals {}", pool.token0_decimals());
-    println!("Token1 decimals {}", pool.token1_decimals());
+    let weth_usdc_v2_pool = gweiyser.uniswap_v2_pool(weth_usdc_v2_address).await;
+    println!("Uniswap v2 weth usdc pool {:#?}", weth_usdc_v2_pool);
 
-    let router = gweiyser.uniswap_v2_router();
-    let path = vec![WETH, USDC, DAI];
-    let weth_usdc_dai_out = router.get_amounts_out(ONE_ETH, &path).await;
-    println!("weth_usdc_dai_out: {}", weth_usdc_dai_out.last().unwrap());
+    // V3
+    let factory = gweiyser.uniswap_v3_factory();
+    let weth_usdc_v3_address = factory.get_pool(&WETH, &USDC, 3000).await;
+    println!(
+        "Uniswap v3 weth usdc pool address {:?}",
+        weth_usdc_v3_address
+    );
 
-    let factory = gweiyser.uniswap_v2_factory();
-    let weth_usdc_pool = factory.get_pair(&WETH, &USDC).await;
-    println!("weth_usdc_pool: {}", weth_usdc_pool);
+    let weth_usdc_v3_pool = gweiyser.uniswap_v3_pool(weth_usdc_v3_address).await;
+    println!("Uniswap v3 weth usdc pool {:#?}", weth_usdc_v3_pool);
+
+    // simulate swap out
+    let dai_out = weth_usdc_v3_pool.get_amount_out(WETH, ONE_ETH)?;
+    println!("UniswapV3 swap 1 weth for {} dai", dai_out);
+
+    // get the current price
+    let current_price = weth_usdc_v3_pool.get_price(WETH)?;
+    println!("Current price {}", current_price);
 
     Ok(())
 }

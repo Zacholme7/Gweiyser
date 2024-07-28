@@ -51,6 +51,9 @@ async fn main() -> Result<()> {
     let balance = weth.balance_of(main_account).await;
     println!("balance: {}", balance);
 
+
+
+
     Ok(())
 }
 

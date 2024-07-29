@@ -2,6 +2,7 @@ use alloy::network::Network;
 use alloy::primitives::Address;
 use alloy::providers::Provider;
 use alloy::transports::Transport;
+use protocols::uniswap::v3::quoter::UniswapV3Quoter;
 use std::marker::PhantomData;
 use std::sync::Arc;
 
@@ -71,8 +72,11 @@ where
         UniswapV3Factory::new(self.http.clone())
     }
 
-
-
+    /// Construct a new uniswapv3 quoter
+    pub fn uniswap_v3_quoter(&self) -> UniswapV3Quoter<P, T, N> {
+        let quoter = UniswapV3Quoter::new(self.http.clone());
+        quoter
+    }
     /*
 
     /// Construct a new uniswapv3 router
@@ -81,11 +85,6 @@ where
         router
     }
 
-    /// Construct a new uniswapv3 quoter
-    pub async fn uniswap_v3_quoter(&self) -> UniswapV3Quoter<P, T, N> {
-        let quoter = UniswapV3Quoter::new(self.http.clone()).await;
-        quoter
-    }
 
     */
 }

@@ -1,6 +1,6 @@
 [package]
 name = "gweiyser"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Swiss army knife for EVM development"
 license = "MIT OR Apache-2.0"

@@ -14,7 +14,6 @@ use gweiyser::Gweiyser;
 async fn main() -> Result<()> {
     // Construct provider and anvil instance
     let url = "https://eth.merkle.io";
-    let url = "https://rpc.merkle.io/1/sk_mbs_f124c596d96bd0fddcdaaa0ff626ade0";
     let anvil = Anvil::new().fork(url).try_spawn()?;
     let signer: PrivateKeySigner = anvil.keys()[0].clone().into();
     let wallet = EthereumWallet::new(signer);
@@ -24,7 +23,6 @@ async fn main() -> Result<()> {
             .wallet(wallet)
             .on_http(anvil.endpoint_url()),
     );
-
     // instantiate gweiyser with provider
     let gweiyser = Gweiyser::new(provider.clone());
 

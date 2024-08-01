@@ -110,4 +110,13 @@ where
                 .unwrap();
         }
     }
+
+    pub async fn transfer_from(&self, from: Address, to: Address, amount: U256) {
+        let _ = self
+            .token_contract
+            .transferFrom(from, to, amount)
+            .send()
+            .await
+            .unwrap();
+    }
 }

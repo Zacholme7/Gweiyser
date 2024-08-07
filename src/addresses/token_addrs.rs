@@ -13,4 +13,6 @@ pub mod ethereum_tokens {
 /// List of commonly used token addresses for Base
 pub mod base_tokens {
     use super::*;
+    pub const WETH: Address = address!("4200000000000000000000000000000000000006");
+    pub const BRETT: Address = address!("532f27101965dd16442E59d40670FaF5eBB142E4");
 }

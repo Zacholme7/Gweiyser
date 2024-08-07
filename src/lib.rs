@@ -17,6 +17,12 @@ mod sync_pools;
 mod token;
 pub mod util;
 
+#[derive(Clone, Copy, PartialEq)]
+pub enum Chain {
+    Ethereum,
+    Base,
+}
+
 pub struct Gweiyser<P, T, N>
 where
     P: Provider<T, N>,
@@ -24,6 +30,7 @@ where
     N: Network,
 {
     http: Arc<P>,
+    chain: Chain,
     _phantom: PhantomData<(T, N)>,
 }
 
@@ -34,9 +41,10 @@ where
     N: Network,
 {
     /// Construct a new Gweisyer
-    pub fn new(http_provider: Arc<P>) -> Self {
+    pub fn new(http_provider: Arc<P>, chain: Chain) -> Self {
         Self {
             http: http_provider,
+            chain,
             _phantom: PhantomData,
         }
     }
@@ -54,12 +62,12 @@ where
 
     /// Construct a new uniswapv2 router
     pub fn uniswap_v2_router(&self) -> UniswapV2Router<P, T, N> {
-        UniswapV2Router::new(self.http.clone())
+        UniswapV2Router::new(self.http.clone(), self.chain)
     }
 
     /// Construct a new uniswapv2 factory
     pub fn uniswap_v2_factory(&self) -> UniswapV2Factory<P, T, N> {
-        UniswapV2Factory::new(self.http.clone())
+        UniswapV2Factory::new(self.http.clone(), self.chain)
     }
 
     /// Construct a new uniswapv3 pool
@@ -69,13 +77,12 @@ where
 
     /// Construct a new uniswapv3 factory
     pub fn uniswap_v3_factory(&self) -> UniswapV3Factory<P, T, N> {
-        UniswapV3Factory::new(self.http.clone())
+        UniswapV3Factory::new(self.http.clone(), self.chain)
     }
 
     /// Construct a new uniswapv3 quoter
     pub fn uniswap_v3_quoter(&self) -> UniswapV3Quoter<P, T, N> {
-        let quoter = UniswapV3Quoter::new(self.http.clone());
-        quoter
+        UniswapV3Quoter::new(self.http.clone(), self.chain)
     }
     /*
 

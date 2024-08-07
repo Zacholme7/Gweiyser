@@ -5,7 +5,8 @@ use alloy::transports::Transport;
 use std::sync::Arc;
 
 use super::gen::IUniswapV2Router::{self, IUniswapV2RouterInstance};
-use crate::addresses::amm_addrs::uniswap_v2::ROUTER;
+use crate::Chain;
+use crate::addresses::amm_addrs::uniswap_v2::{base, ethereum};
 
 pub struct UniswapV2Router<P, T, N>
 where
@@ -23,8 +24,14 @@ where
     N: Network,
 {
     /// Creates an instance of a new UniswapV2 router
-    pub fn new(provider: Arc<P>) -> Self {
-        let router_contract = IUniswapV2Router::new(ROUTER, provider.clone());
+    pub fn new(provider: Arc<P>, chain: Chain) -> Self {
+        let addr = if chain == Chain::Ethereum { 
+            ethereum::ROUTER 
+        } else { 
+            base::ROUTER 
+        };
+
+        let router_contract = IUniswapV2Router::new(addr, provider.clone());
         Self { router_contract }
     }
 

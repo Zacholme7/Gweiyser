@@ -5,7 +5,9 @@ use alloy::transports::Transport;
 use std::sync::Arc;
 
 use super::gen::{IUniswapV2Factory, IUniswapV2Factory::IUniswapV2FactoryInstance};
-use crate::addresses::amm_addrs::uniswap_v2::FACTORY;
+use crate::Chain;
+use crate::addresses::amm_addrs::uniswap_v2::{base, ethereum};
+
 
 pub struct UniswapV2Factory<P, T, N>
 where
@@ -23,8 +25,14 @@ where
     N: Network,
 {
     /// Creates an instance of a new UniswapV2 factory
-    pub fn new(provider: Arc<P>) -> Self {
-        let factory_contract = IUniswapV2Factory::new(FACTORY, provider.clone());
+    pub fn new(provider: Arc<P>, chain: Chain) -> Self {
+        let addr = if chain == Chain::Ethereum { 
+            ethereum::FACTORY 
+        } else { 
+            base::FACTORY 
+        };
+
+        let factory_contract = IUniswapV2Factory::new(addr, provider.clone());
         Self { factory_contract }
     }
 

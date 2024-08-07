@@ -1,11 +1,12 @@
-use alloy::transports::Transport;
+use alloy::network::Network;
 use alloy::primitives::Address;
 use alloy::providers::Provider;
-use alloy::network::Network;
+use alloy::transports::Transport;
 use std::sync::Arc;
 
 use super::gen::ITickLens::{self, ITickLensInstance};
-use crate::addresses::amm_addrs::uniswap_v3::TICK_LEN;
+use crate::addresses::amm_addrs::uniswap_v3::{base, ethereum};
+use crate::Chain;
 
 pub struct TickLens<P, T, N>
 where
@@ -30,8 +31,14 @@ where
     N: Network,
 {
     /// Create a new tick lens contract
-    pub fn new(provider: Arc<P>) -> Self {
-        let tick_lens_contract = ITickLens::new(TICK_LEN, provider.clone());
+    pub fn new(provider: Arc<P>, chain: Chain) -> Self {
+        let addr = if chain == Chain::Ethereum {
+            ethereum::TICK_LEN
+        } else {
+            base::TICK_LEN
+        };
+
+        let tick_lens_contract = ITickLens::new(addr, provider.clone());
         Self { tick_lens_contract }
     }
 
@@ -57,5 +64,3 @@ where
             .collect()
     }
 }
-
-

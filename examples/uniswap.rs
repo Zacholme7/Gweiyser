@@ -38,9 +38,12 @@ async fn main() -> Result<()> {
     //-------
 
     // construct the factory and get the pool address
-    let factory = gweiyser.uniswap_v3_factory(); 
+    let factory = gweiyser.uniswap_v3_factory();
     let weth_dai_v3_address = factory.get_pool(&WETH, &DAI, 3000).await;
-    println!("Uniswap v3 weth usdc pool address {:?}",weth_dai_v3_address);
+    println!(
+        "Uniswap v3 weth usdc pool address {:?}",
+        weth_dai_v3_address
+    );
 
     // construct and populate a pool from teh address
     let weth_dai_v3_address = gweiyser.uniswap_v3_pool(weth_dai_v3_address).await;
@@ -52,13 +55,14 @@ async fn main() -> Result<()> {
 
     // onchain quoter swap out simulation
     let quoter = gweiyser.uniswap_v3_quoter();
-    let expected_dai = quoter.quote_exact_input_single(ONE_ETH, WETH, DAI, 3000).await;
+    let expected_dai = quoter
+        .quote_exact_input_single(ONE_ETH, WETH, DAI, 3000)
+        .await;
     println!("Expected DAI: {}", expected_dai);
 
     // get the current price
     let current_price = weth_dai_v3_address.get_price(WETH)?;
     println!("Current price {}", current_price);
-
 
     Ok(())
 }

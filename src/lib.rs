@@ -7,7 +7,7 @@ use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::protocols::uniswap::v2::{UniswapV2Factory, UniswapV2Pool, UniswapV2Router};
-use crate::protocols::uniswap::v3::{UniswapV3Factory, UniswapV3Pool};
+use crate::protocols::uniswap::v3::{UniswapV3Factory, UniswapV3Pool, UniswapV3Router};
 use crate::token::Token;
 
 // modules defines
@@ -84,14 +84,11 @@ where
     pub fn uniswap_v3_quoter(&self) -> UniswapV3Quoter<P, T, N> {
         UniswapV3Quoter::new(self.http.clone(), self.chain)
     }
-    /*
 
     /// Construct a new uniswapv3 router
-    pub async fn uniswap_v3_router(&self) -> UniswapV3Router<P, T, N> {
-        let router = UniswapV3Router::new(self.http.clone()).await;
-        router
+    pub fn uniswap_v3_router(&self) -> UniswapV3Router<P, T, N> {
+        UniswapV3Router::new(self.http.clone(), self.chain)
     }
 
 
-    */
 }

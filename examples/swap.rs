@@ -33,12 +33,14 @@ async fn main() -> Result<()> {
     weth.deposit(ONE_ETH).await;
     weth.approve(ROUTER, U256::from(5e18)).await;
 
-    let v3_router = gweiyser.uniswap_v3_router().await;
+    let v3_router = gweiyser.uniswap_v3_router();
 
+    /* 
     let out = v3_router
         .exact_input_single(U256::from(1e17), WETH, BRETT, 3000, anvil.addresses()[0])
         .await;
 
     println!("{:?}", out);
+    */
     Ok(())
 }

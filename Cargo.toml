@@ -1,6 +1,6 @@
 [package]
 name = "gweiyser"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "Swiss army knife for EVM development"
 license = "MIT OR Apache-2.0"
@@ -13,6 +13,10 @@ path = "examples/token.rs"
 [[bin]]
 name = "uniswap"
 path = "examples/uniswap.rs"
+
+[[bin]]
+name = "swap"
+path = "examples/swap.rs"
 
 [dependencies]
 alloy = { version = "0.2.0", features = ["full", "node-bindings"] }

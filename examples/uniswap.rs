@@ -8,7 +8,7 @@ use gweiyser::util::ONE_ETH;
 use std::sync::Arc;
 
 use gweiyser::addresses::tokens::ethereum_tokens::{DAI, USDC, WETH};
-use gweiyser::Gweiyser;
+use gweiyser::{Chain, Gweiyser};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -24,7 +24,7 @@ async fn main() -> Result<()> {
             .on_http(anvil.endpoint_url()),
     );
     // instantiate gweiyser with provider
-    let gweiyser = Gweiyser::new(provider.clone());
+    let gweiyser = Gweiyser::new(provider.clone(), Chain::Ethereum);
 
     // V2
     let factory_v2 = gweiyser.uniswap_v2_factory();

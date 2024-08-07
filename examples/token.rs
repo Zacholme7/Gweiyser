@@ -7,7 +7,7 @@ use std::sync::Arc;
 
 use gweiyser::addresses::tokens::ethereum_tokens::WETH;
 use gweiyser::util::ONE_ETH;
-use gweiyser::Gweiyser;
+use gweiyser::{Chain, Gweiyser};
 
 
 #[tokio::main]
@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     );
 
     // instantiate gweiyser with provider
-    let gweiyser = Gweiyser::new(provider.clone());
+    let gweiyser = Gweiyser::new(provider.clone(), Chain::Ethereum);
 
     // Construct new tokens and query general information
     // The info will be automatically populated via the provider upon construciton

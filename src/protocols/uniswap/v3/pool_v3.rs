@@ -44,6 +44,12 @@ pub struct TickInfo {
     initialized: bool,
 }
 
+#[derive(Debug)]
+pub struct Slot0 {
+    pub sqrt_price_x96: U256,
+    pub tick: i32,
+}
+
 pub struct CurrentState {
     amount_specified_remaining: I256,
     amount_calculated: I256,
@@ -166,6 +172,16 @@ where
 
     pub fn token0(&self) -> Address {
         self.token0
+    }
+
+    pub async fn slot0(&self) -> Slot0 {
+        let IUniswapV3Pool::slot0Return { sqrtPriceX96, tick, ..} = self.pool_contract.slot0().call().await.unwrap();
+        Slot0 { sqrt_price_x96: sqrtPriceX96, tick }
+    }
+
+    pub async fn liquidity(&self) -> u128 {
+        let IUniswapV3Pool::liquidityReturn { _0: liquidity } = self.pool_contract.liquidity().call().await.unwrap();
+        liquidity
     }
 
     pub fn token1(&self) -> Address {

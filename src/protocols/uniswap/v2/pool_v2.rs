@@ -4,11 +4,17 @@ use alloy::providers::Provider;
 use alloy::transports::Transport;
 use std::sync::Arc;
 
-use super::gen::IUniswapV2Pool;
+use super::gen::{IUniswapV2Pool, IUniswapV2Pool::IUniswapV2PoolInstance};
 use crate::token::ERC20Token;
 
-#[derive(Default, Debug)]
-pub struct UniswapV2Pool {
+#[derive(Debug)]
+pub struct UniswapV2Pool<P, T, N>
+where 
+    P: Provider<T, N>,
+    T: Transport + Clone,
+    N: Network,
+{
+    pool_contract: IUniswapV2PoolInstance<T, Arc<P>, N>,
     pool_address: Address,
     token0_address: Address,
     token1_address: Address,
@@ -18,17 +24,18 @@ pub struct UniswapV2Pool {
     token1_decimals: u8,
     token0_reserves: u128,
     token1_reserves: u128,
+
 }
 
-impl UniswapV2Pool {
+impl<P, T, N> UniswapV2Pool<P, T, N> 
+where 
+    P: Provider<T, N>,
+    T: Transport + Clone,
+    N: Network,
+{
     /// Create a new pool and populate it
     /// todo!() make it opetial between two tokens and address
-    pub async fn new<P, T, N>(address: Address, provider: Arc<P>) -> Self
-    where
-        P: Provider<T, N>,
-        T: Transport + Clone,
-        N: Network,
-    {
+    pub async fn new(address: Address, provider: Arc<P>) -> Self {
         let pool_contract = IUniswapV2Pool::new(address, provider.clone());
         let IUniswapV2Pool::token0Return { _0: token0 } =
             pool_contract.token0().call().await.unwrap();
@@ -58,6 +65,7 @@ impl UniswapV2Pool {
         } = pool_contract.getReserves().call().await.unwrap();
 
         Self {
+            pool_contract,
             pool_address: address,
             token0_address: token0,
             token1_address: token1,
@@ -99,11 +107,15 @@ impl UniswapV2Pool {
         self.token1_decimals
     }
 
-    pub fn token0_reserves(&self) -> U256 {
+    pub async fn token0_reserves(&mut self) -> U256 {
+        let IUniswapV2Pool::getReservesReturn { _reserve0, .. } = self.pool_contract.getReserves().call().await.unwrap();
+        self.token0_reserves = _reserve0;
         U256::from(self.token0_reserves)
     }
 
-    pub fn token1_reserves(&self) -> U256 {
+    pub async fn token1_reserves(&mut self) -> U256 {
+        let IUniswapV2Pool::getReservesReturn { _reserve1, .. } = self.pool_contract.getReserves().call().await.unwrap();
+        self.token1_reserves = _reserve1;
         U256::from(self.token1_reserves)
     }
 }

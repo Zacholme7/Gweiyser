@@ -56,7 +56,7 @@ where
     }
 
     /// Construct a new uniswapv2 pool
-    pub async fn uniswap_v2_pool(&self, address: Address) -> UniswapV2Pool {
+    pub async fn uniswap_v2_pool(&self, address: Address) -> UniswapV2Pool<P, T, N> {
         UniswapV2Pool::new(address, self.http.clone()).await
     }
 

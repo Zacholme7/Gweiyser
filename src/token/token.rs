@@ -100,15 +100,13 @@ where
 
     // swap from eth into token
     pub async fn deposit(&self, amount: U256) {
-        if self.address == WETH {
-            let _ = self
-                .token_contract
-                .deposit()
-                .value(amount)
-                .send()
-                .await
-                .unwrap();
-        }
+        let _ = self
+            .token_contract
+            .deposit()
+            .value(amount)
+            .send()
+            .await
+            .unwrap();
     }
 
     pub async fn transfer_from(&self, from: Address, to: Address, amount: U256) {
